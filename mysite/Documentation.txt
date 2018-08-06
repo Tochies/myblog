@@ -1,0 +1,26 @@
+1. After doing the necessary python, venv and django project and apps migrations, we install the "pytz module: This module provides timezone definitions for python and sqlite to work properly"
+2. To use the default django timezone," use the USE_TZ setting in the settings.py file"
+3. We use the django objects manager to create, update, delete and save new model objects
+    This is easier to do with the django admin interface, except on cases when there is need to interact with the database
+4. Our post in the blog are given the options of being published or draft, draft posts can not be seen by a visitor, the can only be edited by admin or author
+    Only published posts are to be shown on website, hence the need to create a custom manager to query only published posts
+5.  We use django-taggit, a third party module to add automatic tags to our models, tags will enable easy grouping of posts and search
+6. We use canonical url to remove hardcoded urls views. This removes hardcoded urls from our html templates
+7. All templates should extend the base.html template, except templates that dont render browser views
+8. We create templates for our views. any views that should show on the browser should have a template
+9. context used in views are used for calls on the templates, so we set contexts to be rendered in our views
+10. We create a new model for the comments, since we will be storing them and they have features like posts
+11. To add tags to our posts, we use a third party module django-taggit, after installing the app, we include it to the project installed apps
+12. Whenever changes are made to the project settings or our model, manage.py migrate should be performed
+13. We use tags to group our posts and use it display similar posts
+14. WE create custom template tag for our blog_tags..all custom template tags must live inside the app
+15. Hence we create a custom tag to retrieve the total posts published on the blog
+16. We use markdown, a third party module alongside django's marksafe to create custom tags to truncate words
+17. We add sitemaps to our blog using the django's sitemap framework, to use sitemaps, we include it in outr installed apps
+18. Read up more on the use of sitemaps
+19. We add Feeds to our blog using django built in feeds
+20. Read up more on the use of feeds
+21.
+
+
+

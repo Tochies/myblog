@@ -1,0 +1,86 @@
+{% extends "blog/base.html" %}
+{% load blog_tags %}
+<!---
+1. We show the contents/details of an individual post
+2. We ensure to put the post title as the browser title
+--->
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+    <!---
+    1. We put the post title in a line, then new line with published date and author
+    2. Next we make a line for Tags of the post
+    3. make a new line to display post body content and use the markdown moodule to break line
+    4. After the end of the post
+    --->
+    <h1> {{ post.title }}</h1>
+    <p class="date">
+        Published {{ post.publish }} by {{ post.author }}
+    </p>
+    <p class="tags">Tags:
+        {% for tag in post.tags.all %}
+            <a href="{% url "blog:post_list_by_tag" tag.slug %}">
+            {{ tag.name }}
+            </a>
+            {% if not forloop.last %},{% endif %}
+        {% endfor %}
+    </p>
+    {{ post.body|markdown }}
+
+    <!---Here we tell the detail template to include the share_post view, with the post to be shared as the post id
+    --->
+    <p>
+        <a href="{% url  "blog:post_share"  post.id %}"> Share this post </a>
+    </p>
+    <!---
+    Here we define a template to get post url and title for similar post or display no similar post
+    --->
+    <h3> Similar posts</h3>
+    {% for post in similar_posts %}
+    <p>
+        <a href="{{ post.get_absolute_url }}"> {{ post.title }}</a>
+    </p>
+    {% empty %}
+    There are no similar posts
+    {% endfor %}
+
+    <!---
+    1. We first count the number of comments
+    2. And then display the total number of comments and use pluralize to add s if there are more than one comments
+    --->
+
+    {% with comments.count as total_comments %}
+    <h2>
+        {{ total_comments }} comment{{ total_comments|pluralize }}
+    </h2>
+    {% endwith %}
+
+    <!---
+    1. Using a for statement, Next we display the list of comments on the post so far
+    2. if none, we display no comments yet
+    3. Using an if statement, we provide room for new comment to be added
+    4. This new comment is displayed using the comment model,form and view in the post_detail view
+    --->
+    {% for comment in comments %}
+    <div class="comment">
+        <p class="info">
+            Comment {{ forloop.counter }} by {{ comment.name }}
+            {{comment.created }}
+        </p>
+        {{ comment.body|linebreaks }}
+    </div>
+    {% empty %}
+    <p> There are no comments yet.</p>
+    {% endfor %}
+    {% if new_comment %}
+        <h2> Your comment has been added.</h2>
+    {% else %}
+        <h2> Add a new comment</h2>
+        <form action="." method="post">
+            {{ comment_form.as_p }}
+            {% csrf_token %}
+            <p><input type="submit" value="Add comment"></p>
+        </form>
+    {% endif %}
+{% endblock %}
